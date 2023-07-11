@@ -13,6 +13,8 @@ import "./dropdown_styles/style.css";
 import { writeFile, utils } from "xlsx";
 import { dataref } from "./firebase";
 import firebase from "firebase/compat/app";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // firebase config files //////////////
 
 const Cyient = () => {
@@ -69,12 +71,25 @@ const Cyient = () => {
       ProbabilityAdjRevenue: probadjrev || "",
       PipelineRevenue: Math.round(pipeline_revenue) || "",
       PipelineRevenueInUSD: Math.round(pipeline_revenue) || "",
+
+
+        // Toast Sucesss -----------------------
+
+        // dataref.ref('data')
+
+
     };
     
 
     setData((prevData) => [...prevData, newData]);
 
-    dataref.ref("data").set(alldata.concat(newData)).catch(alert);
+    dataref
+    .ref('data')
+    .set(alldata.concat(newData))
+    .then(() => {
+      toast.success('Data submitted successfully');
+    })
+    .catch(alert);
     console.log(alldata)
   };
 
@@ -426,14 +441,17 @@ const Cyient = () => {
 
   let pipeline_revenue = probadjrev * (100 / percentage) || "";
 
+
+
+
   
 
   
   return (
     <div className="main_app">
-      <Container>
+      <Container fluid >
         <Row>
-          <Row md={3} lg={4} sm={2} xs={1}>
+          <Row md={4} lg={5} sm={2} xs={1}>
             <Col>
               <Label for="BU">BU</Label>
               <Example
@@ -750,9 +768,11 @@ const Cyient = () => {
             </Col>
           </Row>
         </Row>
-        <Button onClick={handleAdd}>Submit</Button>
-        <Button onClick={exportToExcel}>Export Excel</Button>
+        
       </Container>
+      <Button onClick={handleAdd}>Submit</Button>
+        <Button onClick={exportToExcel}>Export Excel</Button>
+      <ToastContainer />
     </div>
   );
 };
